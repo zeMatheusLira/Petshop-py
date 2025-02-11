@@ -1,0 +1,6 @@
+=== Relatório do Petshop ===
+
+Clientes e Pets:
+Cliente: teteu - Telefone: 82828282
+Pet: rex - Espécie: caramelo
+Nenhum produto cadastrado.
