@@ -30,7 +30,7 @@ def menu():
             print("Opção inválida! Tente novamente.")
 
 def gerar_relatorio():
-    with open("relatorio.txt", "w", encoding="utf-8") as f:
+    with open("./report/relatorio.txt", "w", encoding="utf-8") as f:
         f.write("=== Relatório do Petshop ===\n")
         
         # Relatório de Clientes
