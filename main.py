@@ -29,11 +29,14 @@ def menu():
         else:
             print("Opção inválida! Tente novamente.")
 
+from fpdf import FPDF 
+
 def gerar_relatorio():
-    with open("./report/relatorio.txt", "w", encoding="utf-8") as f:
+
+    with open("relatorio.txt", "w", encoding="utf-8") as f:
         f.write("=== Relatório do Petshop ===\n")
         
-        # Relatório de Clientes
+        
         try:
             caminho_clientes = os.path.join("dados", "clientes.json")
             with open(caminho_clientes, "r", encoding="utf-8") as file:
@@ -45,7 +48,7 @@ def gerar_relatorio():
         except (FileNotFoundError, json.JSONDecodeError):
             f.write("Nenhum cliente cadastrado.\n")
 
-        # Relatório de Produtos
+        
         try:
             caminho_produtos = os.path.join("dados", "produtos.json")
             with open(caminho_produtos, "r", encoding="utf-8") as file:
@@ -56,7 +59,42 @@ def gerar_relatorio():
         except (FileNotFoundError, json.JSONDecodeError):
             f.write("Nenhum produto cadastrado.\n")
     
-    print("Relatório gerado com sucesso! Consulte o arquivo 'relatorio.txt'.")
+    print("Relatório TXT gerado com sucesso! Consulte o arquivo 'relatorio.txt'.")
+
+    
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    
+    pdf.cell(200, 10, txt="=== Relatório do Petshop ===", ln=True, align="C")
+
+    
+    pdf.cell(200, 10, txt="Clientes e Pets:", ln=True, align="L")
+    try:
+        caminho_clientes = os.path.join("dados", "clientes.json")
+        with open(caminho_clientes, "r", encoding="utf-8") as file:
+            clientes = json.load(file)
+            for cliente in clientes:
+                pdf.cell(200, 10, txt=f"Cliente: {cliente['nome']} - Telefone: {cliente['telefone']}", ln=True, align="L")
+                pdf.cell(200, 10, txt=f"Pet: {cliente['pet']['nome']} - Espécie: {cliente['pet']['especie']}", ln=True, align="L")
+    except (FileNotFoundError, json.JSONDecodeError):
+        pdf.cell(200, 10, txt="Nenhum cliente cadastrado.", ln=True, align="L")
+
+    
+    pdf.cell(200, 10, txt="Produtos em Estoque:", ln=True, align="L")
+    try:
+        caminho_produtos = os.path.join("dados", "produtos.json")
+        with open(caminho_produtos, "r", encoding="utf-8") as file:
+            produtos = json.load(file)
+            for produto in produtos:
+                pdf.cell(200, 10, txt=f"Produto: {produto['nome']} - Preço: R${produto['preco']:.2f} - Quantidade: {produto['quantidade']}", ln=True, align="L")
+    except (FileNotFoundError, json.JSONDecodeError):
+        pdf.cell(200, 10, txt="Nenhum produto cadastrado.", ln=True, align="L")
+
+    
+    pdf.output("relatorio.pdf")
+    print("Relatório PDF gerado com sucesso! Consulte o arquivo 'relatorio.pdf'.")
 
 if __name__ == "__main__":
     menu()
